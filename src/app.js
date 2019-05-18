@@ -1,14 +1,14 @@
-const Mountains = require('./models/mountains.js');
-const MountainListView = require('./views/mountain_list_view.js');
-const MountainView = require('./views/mountain_view.js');
+const Countries = require('./models/countries.js');
+const CountriesListView = require('./views/countries_list_view.js');
+const CountryView = require('./views/country_view.js');
 
 document.addEventListener('DOMContentLoaded', () =>{
 
-const mountainsListContainer = document.querySelector('section#mountains');
-const mountainListView = new MountainListView(mountainsListContainer);
-mountainListView.bindEvents();
+const countriesListContainer = document.querySelector('div.countries');
+const countriesListView = new CountriesListView(countriesListContainer);
+countriesListView.bindEvents();
 
-const mountains = new Mountains('https://munroapi.herokuapp.com/munros');
-// mountains.bindEvents();
-mountains.getData();
-})
+const countries = new Countries('https://restcountries.eu/rest/v2/all');
+countries.getData();
+
+});

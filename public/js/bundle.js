@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Mountains = __webpack_require__(/*! ./models/mountains.js */ \"./src/models/mountains.js\");\nconst MountainListView = __webpack_require__(/*! ./views/mountain_list_view.js */ \"./src/views/mountain_list_view.js\");\nconst MountainView = __webpack_require__(/*! ./views/mountain_view.js */ \"./src/views/mountain_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () =>{\n\nconst mountainsListContainer = document.querySelector('section#mountains');\nconst mountainListView = new MountainListView(mountainsListContainer);\nmountainListView.bindEvents();\n\nconst mountains = new Mountains('https://munroapi.herokuapp.com/munros');\n// mountains.bindEvents();\nmountains.getData();\n})\n\n\n//# sourceURL=webpack:///./src/app.js?");
+eval("const Countries = __webpack_require__(/*! ./models/countries.js */ \"./src/models/countries.js\");\nconst CountriesListView = __webpack_require__(/*! ./views/countries_list_view.js */ \"./src/views/countries_list_view.js\");\nconst CountryView = __webpack_require__(/*! ./views/country_view.js */ \"./src/views/country_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () =>{\n\nconst countriesListContainer = document.querySelector('div.countries');\nconst countriesListView = new CountriesListView(countriesListContainer);\ncountriesListView.bindEvents();\n\nconst countries = new Countries('https://restcountries.eu/rest/v2/all');\ncountries.getData();\n\n});\n\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
@@ -104,7 +104,7 @@ eval("const Mountains = __webpack_require__(/*! ./models/mountains.js */ \"./src
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const PubSub = {\n  publish: function (channel, payload) {\n    const event = new CustomEvent(channel, {\n      detail: payload\n    });\n    document.dispatchEvent(event);\n  },\n\n  subscribe: function (channel, callback) {\n    document.addEventListener(channel, callback);\n  }\n};\n\nmodule.exports = PubSub;\n\n\n//# sourceURL=webpack:///./src/helpers/pub_sub.js?");
+eval("const PubSub = {\n  publish: function (channel, payload) {\n    const event = new CustomEvent(channel, {\n        detail: payload\n    });\n      document.dispatchEvent(event);\n  },\n  subscribe: function(channel, callback){\n    document.addEventListener(channel, callback);\n  }\n\n};\n\nmodule.exports = PubSub;\n\n\n//# sourceURL=webpack:///./src/helpers/pub_sub.js?");
 
 /***/ }),
 
@@ -115,40 +115,40 @@ eval("const PubSub = {\n  publish: function (channel, payload) {\n    const even
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const RequestHelper = function (url) {\n  this.url = url;\n};\n\nRequestHelper.prototype.get = function () {\n  return fetch(this.url)\n      .then(response => response.json())\n      .catch( err => console.log(\"Error in get:\", err))\n};\n\nmodule.exports = RequestHelper;\n\n\n//# sourceURL=webpack:///./src/helpers/request_helper.js?");
+eval("const RequestHelper = function(url) {\n  this.url = url;\n};\n\nRequestHelper.prototype.get = function () {\n  return fetch(this.url)\n        .then(response => response.json())\n          .catch(err => console.log(\"Sth is wront with get\", err))\n\n\n};\n\nmodule.exports = RequestHelper;\n\n\n//# sourceURL=webpack:///./src/helpers/request_helper.js?");
 
 /***/ }),
 
-/***/ "./src/models/mountains.js":
+/***/ "./src/models/countries.js":
 /*!*********************************!*\
-  !*** ./src/models/mountains.js ***!
+  !*** ./src/models/countries.js ***!
   \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const RequestHelper = __webpack_require__(/*! ../helpers/request_helper.js */ \"./src/helpers/request_helper.js\");\nconst PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\nconst Mountains = function(url) {\n  this.url = url;\n  this.mountains = [];\n}\n\n\nMountains.prototype.getData = function() {\n const request = new RequestHelper(this.url);\n\n request.get()\n  .then((data) =>{\n    this.mountains = data;\n    PubSub.publish('Mountains:mountains-data-ready', this.mountains);\n    \n  })\n}\n\n\nmodule.exports = Mountains;\n\n\n//# sourceURL=webpack:///./src/models/mountains.js?");
+eval("const RequestHelper = __webpack_require__(/*! ../helpers/request_helper.js */ \"./src/helpers/request_helper.js\");\nconst PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\nconst Countries = function(url) {\n    this.url = url;\n    this.countries = [];\n}\n\n\nCountries.prototype.getData = function() {\n  const request = new RequestHelper(this.url);\n\n  request.get()\n  .then((data) =>{\n    this.countries = data;\n    console.log(data);\n    PubSub.publish('Countries:countries-data-ready', this.countries);\n  })\n\n}\n\nmodule.exports = Countries;\n\n\n//# sourceURL=webpack:///./src/models/countries.js?");
 
 /***/ }),
 
-/***/ "./src/views/mountain_list_view.js":
-/*!*****************************************!*\
-  !*** ./src/views/mountain_list_view.js ***!
-  \*****************************************/
+/***/ "./src/views/countries_list_view.js":
+/*!******************************************!*\
+  !*** ./src/views/countries_list_view.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\nconst MountainView = __webpack_require__(/*! ./mountain_view.js */ \"./src/views/mountain_view.js\");\n\n\nconst MountainListView = function(container) {\n  this.container = container;\n\n}\n\nMountainListView.prototype.bindEvents = function() {\n  PubSub.subscribe('Mountains:mountains-data-ready', (event) => {\n    this.mountains = event.detail;\n    this.render();\n    // console.log(event.detail);\n  });\n\n}\n\nMountainListView.prototype.render = function() {\n  this.mountains.forEach((mountain) =>{\n    const mountainView = new MountainView(this.container);\n    mountainView.render(mountain);\n    // console.log(mountainView);\n  })\n\n}\n\n\n\n\nmodule.exports = MountainListView;\n\n\n//# sourceURL=webpack:///./src/views/mountain_list_view.js?");
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\nconst CountryView = __webpack_require__(/*! ./country_view.js */ \"./src/views/country_view.js\");\n\nconst CountriesListView = function(container) {\n  this.container = container;\n}\n\nCountriesListView.prototype.bindEvents = function() {\n  PubSub.subscribe('Countries:countries-data-ready', (event) =>{\n    this.countries = event.detail;\n    this.render();\n  });\n}\n\n\nCountriesListView.prototype.render = function() {\n  this.countries.forEach((country) =>{\n    const countryView = new CountryView(this.container);\n    countryView.render(country);\n  })\n}\n\n\n\n\nmodule.exports = CountriesListView;\n\n\n//# sourceURL=webpack:///./src/views/countries_list_view.js?");
 
 /***/ }),
 
-/***/ "./src/views/mountain_view.js":
-/*!************************************!*\
-  !*** ./src/views/mountain_view.js ***!
-  \************************************/
+/***/ "./src/views/country_view.js":
+/*!***********************************!*\
+  !*** ./src/views/country_view.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\nconst MountainView = function(container){\n  this.container = container;\n\n}\n\nMountainView.prototype.bindEvents = function() {\n  PubSub.subscribe('Mountains:mountains-data-ready', (event) =>{\n console.log(event);\n    this.render(event.detail)\n  })\n}\n\nMountainView.prototype.render = function(mountain){\n  const mountainName = this.createElement('h2', mountain.name);\n  console.log(mountainName);\n  this.container.appendChild(mountainName);\n\n\n\n  const meaning = this.createElement('p', mountain.meaning);\n  this.container.appendChild(meaning);\n\n  const height = this.createElement('p', mountain.height);\n  this.container.appendChild(height);\n\n\n}\n\nMountainView.prototype.createElement = function(elementType, text) {\n  const element = document.createElement(elementType);\n  element.textContent = text;\n  return element;\n\n}\n\n\n\nMountainView.prototype.populateList = function(list) {\n  this.mountain.mountains.forEach((mountain) =>{\n    const mountainsListItem = document.createElement('li');\n    mountainsListItem.textContent = mountain.name;\n    list.appendChild(mountainsListItem);\n\n  })\n\n}\n\nMountainView.prototype.clearMountain = function() {\n  this.container.innerHTML = '';\n}\n\nmodule.exports = MountainView;\n\n\n//# sourceURL=webpack:///./src/views/mountain_view.js?");
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\nconst CountryView = function(container) {\n  this.container = container;\n\n}\n\nCountryView.prototype.bindEvents = function () {\n  PubSub.subscribe('Countries:countries-data-ready' , (event) =>{\n\n    this.render(event.detail)\n\n  })\n}\n\nCountryView.prototype.render = function(country){\n\n  const countryName = this.createElement('h2', country.name);\n  countryName.className = \"countryName\";\n  this.container.appendChild(countryName)\n\n  const countryCapital = this.createElement('h3', country.capital);\n  countryCapital.className = \"countryCapital\";\n  this.container.appendChild(countryCapital);\n\n  const countryLanguages = this.createElement('p', country.languages[0].name);\n  countryLanguages.className = \"countryLanguages\";\n  this.container.appendChild(countryLanguages);\n\n  const countryPopulation = this.createElement('p', country.population);\n  countryPopulation.className = \"countryPopulation\";\n  this.container.appendChild(countryPopulation);\n\n\n}\n\n\nCountryView.prototype.createElement = function(elementType, text) {\n  const element = document.createElement(elementType);\n  element.textContent = text;\n  return element\n}\n\n\n// CountryView.prototype.populateList = function(list) {\n//   this.country.countries.forEach((country) =>{\n//     const countriesListItem = document.createElement('li');\n//     // countriesListItem.className = \"countryItem\";\n//     countriesListItem.textContent = country.name;\n//     list.appendChild(countriesListItem);\n//   })\n// }\n//\n//   CountryView.prototype.clearCountry = function(){\n//     this.container.innerHTML = '';\n//   }\n\n\n\n\nmodule.exports = CountryView;\n\n\n//# sourceURL=webpack:///./src/views/country_view.js?");
 
 /***/ })
 
